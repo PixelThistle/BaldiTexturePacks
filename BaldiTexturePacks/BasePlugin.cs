@@ -430,6 +430,17 @@ namespace BaldiTexturePacks
                     AddReplacementTarget(x.GetComponent<CursorInitiator>());
                 }
             });
+            AddManualReplacementTargetsFromResources<RendererContainer>().Do(x =>
+            {
+                if (x.name == "PineTree_Bully")
+                {
+                    validMovableComponents.AddRange(x.transform.Find("Sprite").GetComponentsInChildren<SpriteRenderer>());
+                }
+                else if (x.name == "CampFire(Clone)")
+                {
+                    validMovableComponents.AddRange(x.transform.Find("Sprite").GetComponentsInChildren<SpriteRenderer>());
+                }
+            });
             baseElevatorScreen = Resources.FindObjectsOfTypeAll<ElevatorScreen>().First(x => x.GetInstanceID() >= 0 && x.gameObject.scene.name == null);
             yield return "Setting up file structures...";
             if (!Directory.Exists(packsPath))
@@ -596,6 +607,14 @@ namespace BaldiTexturePacks
                 AddOverlaysToTransform(c.transform);
             });
             Resources.FindObjectsOfTypeAll<RendererContainer>().Where(x => x.name == "FirstPrize_SpriteBase").Do(c =>
+            {
+                AddOverlaysToTransform(c.transform);
+            });
+            Resources.FindObjectsOfTypeAll<RendererContainer>().Where(x => x.name == "PineTree_Bully").Do(c =>
+            {
+                AddOverlaysToTransform(c.transform);
+            });
+            Resources.FindObjectsOfTypeAll<RendererContainer>().Where(x => x.name == "CampFire(Clone)").Do(c =>
             {
                 AddOverlaysToTransform(c.transform);
             });
