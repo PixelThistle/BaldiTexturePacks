@@ -381,6 +381,7 @@ namespace BaldiTexturePacks
         {
             yield return 11;
             yield return "Getting base objects...";
+            // Activities
             AddManualReplacementTargetsFromResources<MathMachine>().Do(x =>
             {
                 validMovableComponents.AddRange(x.GetComponentsInChildren<TMP_Text>().Select(z => (Component)z.transform));
@@ -405,31 +406,10 @@ namespace BaldiTexturePacks
             {
                 validMovableComponents.AddRange(x.transform.Find("RendererBase").GetComponentsInChildren<SpriteRenderer>());
             });
+            // Events
             AddManualReplacementTargetsFromResources<FloodEvent>();
             AddManualReplacementTargetsFromResources<FogEvent>();
-            AddManualReplacementTargetsFromResources<HudManager>().Do(x => AddAllChildrenToMovables(x.transform));
-            AddManualReplacementTargetsFromResources<LookAtGuy>();
-            AddManualReplacementTargetsFromResources<DigitalClock>().Do(x =>
-            {
-                validMovableComponents.AddRange(x.GetComponentsInChildren<SpriteRenderer>());
-                validMovableComponents.AddRange(x.GetComponentsInChildren<Image>());
-            });
-            AddManualReplacementTargetsFromResources<ElevatorScreen>().Do(x => AddAllChildrenToMovables(x.transform));
-            AddManualReplacementTargetsFromResources<Item>().Do(x =>
-            {
-                if (x.transform.Find("RendererBase"))
-                {
-                    validMovableComponents.Add(x.transform.Find("RendererBase").GetComponentInChildren<SpriteRenderer>());
-                }
-            });
-            AddManualReplacementTargetsFromResources<BaldiBG>().Do(x =>
-            {
-                AddAllChildrenToMovables(x.transform);
-                if (x.GetComponent<CursorInitiator>())
-                {
-                    AddReplacementTarget(x.GetComponent<CursorInitiator>());
-                }
-            });
+            // Field Trip(s)
             AddManualReplacementTargetsFromResources<RendererContainer>().Do(x =>
             {
                 if (x.name == "PineTree_Bully")
@@ -439,6 +419,38 @@ namespace BaldiTexturePacks
                 else if (x.name == "CampFire(Clone)")
                 {
                     validMovableComponents.AddRange(x.transform.Find("Sprite").GetComponentsInChildren<SpriteRenderer>());
+                }
+            });
+            // UI
+            AddManualReplacementTargetsFromResources<HudManager>().Do(x => AddAllChildrenToMovables(x.transform));
+            AddManualReplacementTargetsFromResources<ElevatorScreen>().Do(x => AddAllChildrenToMovables(x.transform));
+            AddManualReplacementTargetsFromResources<BaldiBG>().Do(x =>
+            {
+                AddAllChildrenToMovables(x.transform);
+                if (x.GetComponent<CursorInitiator>())
+                {
+                    AddReplacementTarget(x.GetComponent<CursorInitiator>());
+                }
+            });
+            // Misc.
+            AddManualReplacementTargetsFromResources<LookAtGuy>();
+            AddManualReplacementTargetsFromResources<DigitalClock>().Do(x =>
+            {
+                validMovableComponents.AddRange(x.GetComponentsInChildren<SpriteRenderer>());
+                validMovableComponents.AddRange(x.GetComponentsInChildren<Image>());
+            });
+            AddManualReplacementTargetsFromResources<Item>().Do(x =>
+            {
+                if (x.transform.Find("RendererBase"))
+                {
+                    validMovableComponents.Add(x.transform.Find("RendererBase").GetComponentInChildren<SpriteRenderer>());
+                }
+            });
+            AddManualReplacementTargetsFromResources<Animator>().Do(x =>
+            {
+                if (x.name.StartsWith("ActivityExteriorSign_"))
+                {
+                    validMovableComponents.Add(x.transform.Find("SignBase").GetComponentInChildren<SpriteRenderer>());
                 }
             });
             baseElevatorScreen = Resources.FindObjectsOfTypeAll<ElevatorScreen>().First(x => x.GetInstanceID() >= 0 && x.gameObject.scene.name == null);
@@ -598,6 +610,10 @@ namespace BaldiTexturePacks
             });
 
             Resources.FindObjectsOfTypeAll<ClickableSpecialFunctionTrigger>().Where(x => x.name.StartsWith("Baldi_Tutorial")).Do(c =>
+            {
+                AddOverlaysToTransform(c.transform);
+            });
+            Resources.FindObjectsOfTypeAll<Animator>().Where(x => x.name.StartsWith("ActivityExteriorSign_")).Do(c =>
             {
                 AddOverlaysToTransform(c.transform);
             });
